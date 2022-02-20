@@ -27,6 +27,7 @@ class ReservationController extends Controller
      */
     public function create(Request $request)
     {
+        $startHour = 10;
         $date = now();
         if ($request->query('date')) {
             try {
@@ -36,7 +37,16 @@ class ReservationController extends Controller
             }
         }
 
-        $allHours = collect(range(10, 17));
+        if ($date->isToday()) {
+            $startHour = now()->addHour()->hour;
+        }
+
+        if ($startHour <= 17) {
+            $allHours = collect(range($startHour, 17));
+        } else {
+            $allHours = collect([]);
+        }
+
         $reservedHours = Reservation::query()
             ->where('reservation_at', '>=', $date->copy()->startOfDay())
             ->where('reservation_at', '<=', $date->copy()->endOfDay())
