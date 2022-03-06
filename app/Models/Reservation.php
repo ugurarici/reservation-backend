@@ -30,4 +30,44 @@ class Reservation extends Model
     protected $casts = [
         'reservation_at' => 'datetime',
     ];
+
+    public $appends = [
+        // 'is_past',
+        'is_oncoming',
+    ];
+
+    /**
+     * Get the user that owns the reservation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User>
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get is_past attribute.
+     *
+     * @return bool
+     */
+    public function getIsPastAttribute()
+    {
+        return $this->reservation_at->isPast();
+    }
+
+    /**
+     * Get is_oncoming attribute.
+     *
+     * @return bool
+     */
+    public function getIsOncomingAttribute()
+    {
+        $usersClosestReservation = $this->user->reservations()
+            ->where('reservation_at', '>=', now())
+            ->orderBy('reservation_at', 'asc')
+            ->first();
+        if (!$usersClosestReservation) return false;
+        return $this->id === $usersClosestReservation->id;
+    }
 }
