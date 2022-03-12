@@ -63,11 +63,15 @@ class Reservation extends Model
      */
     public function getIsOncomingAttribute()
     {
-        $usersClosestReservation = $this->user->reservations()
-            ->where('reservation_at', '>=', now())
-            ->orderBy('reservation_at', 'asc')
-            ->first();
-        if (!$usersClosestReservation) return false;
-        return $this->id === $usersClosestReservation->id;
+        if ($this->user) {
+            $usersClosestReservation = $this->user->reservations()
+                ->where('reservation_at', '>=', now())
+                ->orderBy('reservation_at', 'asc')
+                ->first();
+            if (!$usersClosestReservation) return false;
+            return $this->id === $usersClosestReservation->id;
+        }
+
+        return false;
     }
 }
