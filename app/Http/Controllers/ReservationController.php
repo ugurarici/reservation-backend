@@ -137,6 +137,11 @@ class ReservationController extends Controller
      */
     public function destroy(Reservation $reservation)
     {
-        //
+        if ($reservation->user && $reservation->user->id === Auth::id()) {
+            $reservation->delete();
+            return response()->json("Reservation deleted");
+        } else {
+            return abort(403, "You can't delete this reservation");
+        }
     }
 }
