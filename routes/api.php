@@ -26,3 +26,7 @@ Route::post('register', [UserController::class, 'register'])->name('user.registe
 Route::post('login', [UserController::class, 'login'])->name('user.login');
 Route::middleware(['auth:sanctum'])->post('logout', [UserController::class, 'logout'])->name('user.logout');
 Route::middleware(['auth:sanctum'])->get('me', [UserController::class, 'me'])->name('user.me');
+
+Route::middleware(['auth', 'admin'])->get('/admin', function (Request $request) {
+    return "YOU ARE A ADMIN! CONGRULATIONS!!!!";
+});

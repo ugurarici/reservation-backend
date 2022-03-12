@@ -34,6 +34,15 @@ class User extends Authenticatable
     ];
 
     /**
+     * Append attributes to serialize.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'is_admin',
+    ];
+
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
@@ -50,5 +59,15 @@ class User extends Authenticatable
     public function reservations()
     {
         return $this->hasMany(Reservation::class);
+    }
+
+    /**
+     * Get is_admin attribute.
+     *
+     * @return bool
+     */
+    public function getIsAdminAttribute()
+    {
+        return $this->type === 'admin';
     }
 }
