@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable
 {
@@ -69,5 +70,19 @@ class User extends Authenticatable
     public function getIsAdminAttribute()
     {
         return $this->type === 'admin';
+    }
+
+    /**
+     * Declare User's accessible Reservations, return QueryBuilder
+     *
+     * @return \Illuminate\Database\Eloquent\Builder||\Illuminate\Database\Eloquent\Relations\HasMany<Reservation>
+     */
+    public function accessibleReservations()
+    {
+        if ($this->is_admin) {
+            return Reservation::query();
+        } else {
+            return $this->reservations();
+        }
     }
 }

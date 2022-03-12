@@ -29,15 +29,10 @@ class ReservationController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->is_admin) {
-            $reservations = Reservation::orderBy('reservation_at', 'desc')
-                ->paginate(100);
-        } else {
-            $reservations = $request->user()
-                ->reservations()
-                ->orderBy('reservation_at', 'desc')
-                ->paginate(100);
-        }
+        $reservations = $request->user()
+            ->accessibleReservations()
+            ->orderBy('reservation_at', 'desc')
+            ->paginate(100);
 
         return response()->json($reservations);
     }
