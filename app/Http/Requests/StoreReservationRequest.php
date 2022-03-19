@@ -27,7 +27,7 @@ class StoreReservationRequest extends FormRequest
             'name' => 'required|string|max:100',
             'email' => 'nullable|email',
             'phone' => 'nullable|string|max:50',
-            'reservation_at' => 'required|date_format:Y-m-d H:00:00',
+            'reservation_at' => 'required|date_format:Y-m-d H:00:00|unique:reservations,reservation_at',
         ];
     }
 }

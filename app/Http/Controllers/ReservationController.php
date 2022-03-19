@@ -137,7 +137,7 @@ class ReservationController extends Controller
      */
     public function destroy(Reservation $reservation)
     {
-        if ($reservation->user && $reservation->user->id === Auth::id()) {
+        if (($reservation->user && $reservation->user->id === Auth::id()) or Auth::user()->type == "admin") {
             $reservation->delete();
             return response()->json("Reservation deleted");
         } else {
